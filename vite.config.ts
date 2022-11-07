@@ -2,13 +2,19 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import gzipPlugin from 'rollup-plugin-gzip';
 
 export default defineConfig({
   plugins: [
     react(),
     dts({
+      tsConfigFilePath: 'tsconfig.json',
       insertTypesEntry: true,
+      noEmitOnError: true,
+      skipDiagnostics: false,
+      logDiagnostics: true,
     }),
+    gzipPlugin(),
   ],
   build: {
     lib: {
@@ -26,5 +32,6 @@ export default defineConfig({
         },
       },
     },
+    sourcemap: true,
   },
 });
