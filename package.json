@@ -11,7 +11,6 @@
     "type": "git",
     "url": "https://github.com/Beehive-Software-Consultants/beesoft-react-dragula"
   },
-  "type": "module",
   "main": "./dist/react-dragula.umd.js",
   "module": "./dist/react-dragula.es.js",
   "types": "./types/index.d.ts",
@@ -25,6 +24,7 @@
   },
   "dependencies": {
     "dragula": "^3.7.3",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0"
@@ -35,9 +35,11 @@
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-interactions": "^6.5.12",
     "@storybook/addon-links": "^6.5.12",
+    "@storybook/addons": "^6.5.12",
     "@storybook/builder-vite": "^0.2.4",
     "@storybook/react": "^6.5.12",
     "@storybook/testing-library": "^0.0.13",
+    "@storybook/theming": "^6.5.12",
     "@types/dragula": "^3.7.1",
     "@types/node": "^18.11.0",
     "@types/react": "^18.0.17",
@@ -56,7 +58,7 @@
     "prettier": "^2.7.1",
     "rollup-plugin-gzip": "^3.1.0",
     "typescript": "^4.6.4",
-    "vite": "^3.1.0",
+    "vite": "3.2.7",
     "vite-plugin-dts": "^1.6.6"
   },
   "peerDependencies": {

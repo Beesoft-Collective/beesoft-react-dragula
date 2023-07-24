@@ -1,29 +1,30 @@
 import React, { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import { DragulaService } from '../../services/dragula.service';
+import { isArrayOfObjects } from '../common/common-functions';
 
-export type TypeWithKey<T> = T & { _key: string };
+type TypeWithKey<T> = T & { _key: string };
 
-export interface DragulaContainerProps<T> {
+export interface DragulaContainerProps {
   containerName: string;
   copyItems?: boolean;
   sortDirection?: 'vertical' | 'horizontal';
-  items: Array<T>;
-  onItemsChanged?: (items: Array<T>) => void;
-  children: (item: T) => ReactNode;
+  items: Array<unknown>;
+  onItemsChanged?: (items: Array<unknown>) => void;
+  children: (item: unknown) => ReactNode | Array<ReactNode>;
 }
 
-function DragulaContainer<T>({
+const DragulaContainer = ({
   containerName,
   copyItems = false,
   sortDirection = 'vertical',
   items,
   onItemsChanged,
   children,
-}: DragulaContainerProps<T>) {
-  const [stateItems, setStateItems] = useState<Array<TypeWithKey<T>>>();
+}: DragulaContainerProps) => {
+  const [stateItems, setStateItems] = useState<Array<TypeWithKey<Record<string, unknown>>>>();
 
-  const currentItems = useRef<Array<TypeWithKey<T>>>();
+  const currentItems = useRef<Array<TypeWithKey<Record<string, unknown>>>>();
   const service = useRef<DragulaService>();
   const containerElement = useRef<HTMLElement>();
 
@@ -39,7 +40,11 @@ function DragulaContainer<T>({
   }, []);
 
   useEffect(() => {
-    const itemsWithKey: Array<TypeWithKey<T>> = [];
+    if (!isArrayOfObjects(items)) {
+      throw new Error('The passed items must be an array of objects');
+    }
+
+    const itemsWithKey: Array<TypeWithKey<Record<string, unknown>>> = [];
     for (let i = 0, length = items.length; i < length; i++) {
       itemsWithKey.push({
         ...items[i],
@@ -52,13 +57,20 @@ function DragulaContainer<T>({
   }, [items]);
 
   const reorganizeItems = (children: HTMLCollection) => {
-    // TODO: This will not work when an item is added
-    const newArray: Array<TypeWithKey<T>> = [];
+    const newArray: Array<TypeWithKey<Record<string, unknown>>> = [];
     for (let i = 0, length = children.length; i < length; i++) {
       const child = children[i] as HTMLElement;
       const foundItem = currentItems.current?.find((item) => item._key === child.dataset['id']);
       if (foundItem) {
         newArray.push(foundItem);
+      } else {
+        const parsedItem: Record<string, unknown> = JSON.parse(child.dataset['data'] || '{}');
+        const newItem: TypeWithKey<Record<string, unknown>> = {
+          ...parsedItem,
+          _key: v4(),
+        };
+
+        newArray.push(newItem);
       }
     }
 
@@ -82,13 +94,13 @@ function DragulaContainer<T>({
         stateItems.map((item) => {
           const { _key, ...itemNoKey } = item;
           return (
-            <div key={_key} data-id={_key}>
-              {children(itemNoKey as T)}
+            <div key={_key} data-id={_key} data-data={JSON.stringify(itemNoKey)}>
+              {children(itemNoKey)}
             </div>
           );
         })}
     </div>
   );
-}
+};
 
 export default memo(DragulaContainer);
