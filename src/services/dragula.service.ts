@@ -23,15 +23,22 @@ export class DragulaService {
 
   public addContainers(containers: Array<Element>) {
     const currentContainers = DragulaService.instance.drake.containers;
-    const filteredContainers = containers.filter(
-      (container) =>
-        !currentContainers.some(
-          (currentContainer) =>
-            (currentContainer as HTMLElement).dataset['drag-container'] ===
-            (container as HTMLElement).dataset['drag-container']
-        )
-    );
-    currentContainers.push(...filteredContainers);
+    if (currentContainers.length > 0) {
+      for (let i = 0, length = containers.length; i < length; i++) {
+        const containerId = (containers[i] as HTMLElement).dataset['id'];
+        const foundIndex = currentContainers.findIndex(
+          (container) => (container as HTMLElement).dataset['id'] === containerId
+        );
+
+        if (foundIndex > -1) {
+          currentContainers[foundIndex] = containers[i];
+        } else {
+          currentContainers.push(containers[i]);
+        }
+      }
+    } else {
+      currentContainers.push(...containers);
+    }
   }
 
   public addOptionSetting(settings: DragulaOptions) {

@@ -2,8 +2,7 @@ import React, { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import { DragulaService } from '../../services/dragula.service';
 import { isArrayOfObjects } from '../common/common-functions';
-
-type TypeWithKey<T> = T & { _key: string };
+import { TypeWithKey } from '../common/common-types';
 
 export interface DragulaContainerProps {
   containerName: string;
@@ -11,6 +10,7 @@ export interface DragulaContainerProps {
   sortDirection?: 'vertical' | 'horizontal';
   items: Array<unknown>;
   onItemsChanged?: (items: Array<unknown>) => void;
+  className: string;
   children: (item: unknown) => ReactNode | Array<ReactNode>;
 }
 
@@ -20,10 +20,12 @@ const DragulaContainer = ({
   sortDirection = 'vertical',
   items,
   onItemsChanged,
+  className,
   children,
 }: DragulaContainerProps) => {
   const [stateItems, setStateItems] = useState<Array<TypeWithKey<Record<string, unknown>>>>();
 
+  const containerId = useRef(v4());
   const currentItems = useRef<Array<TypeWithKey<Record<string, unknown>>>>();
   const service = useRef<DragulaService>();
   const containerElement = useRef<HTMLElement>();
@@ -86,6 +88,8 @@ const DragulaContainer = ({
   return (
     <div
       ref={(element) => element && onContainerCreated(element)}
+      className={className}
+      data-id={containerId.current}
       data-drag-container={containerName}
       data-copy={copyItems}
       data-direction={sortDirection}
