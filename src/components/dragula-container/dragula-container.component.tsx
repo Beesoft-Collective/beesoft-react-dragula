@@ -37,10 +37,6 @@ const DragulaContainer = ({
       service.current?.addContainers([containerElement.current]);
     }
 
-    service.current?.addAcceptsListener(containerId.current, (element, target) => {
-      return (target as HTMLElement).dataset['dragContainer'] === containerName;
-    });
-
     service.current?.addOnDropListener((element, target, source) => {
       const htmlTarget = target as HTMLElement;
       const htmlSource = source as HTMLElement;
