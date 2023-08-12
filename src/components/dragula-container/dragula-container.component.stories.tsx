@@ -40,18 +40,44 @@ const Template: Story<DragulaContainerProps> = (args: DragulaContainerProps) => 
   ]);
 
   return (
-    <DragulaContainer {...args} items={data.current}>
-      {(item) => {
-        const renderItem = item as TestItem;
-        return (
-          <>
-            <div>{renderItem.test1}</div>
-            <div>{renderItem.test2}</div>
-            <div>{renderItem.test3}</div>
-          </>
-        );
-      }}
-    </DragulaContainer>
+    <div>
+      <DragulaContainer {...args} items={data.current}>
+        {(item) => {
+          const renderItem = item as TestItem;
+          return (
+            <div className="cursor-pointer">
+              <div>{renderItem.test1}</div>
+              <div>{renderItem.test2}</div>
+              <div>{renderItem.test3}</div>
+            </div>
+          );
+        }}
+      </DragulaContainer>
+      <DragulaContainer {...args} containerName="not-reorder">
+        {(item) => {
+          const renderItem = item as TestItem;
+          return (
+            <div className="cursor-pointer">
+              <div>{renderItem.test1}</div>
+              <div>{renderItem.test2}</div>
+              <div>{renderItem.test3}</div>
+            </div>
+          );
+        }}
+      </DragulaContainer>
+      <DragulaContainer {...args}>
+        {(item) => {
+          const renderItem = item as TestItem;
+          return (
+            <div className="cursor-pointer">
+              <div>{renderItem.test1}</div>
+              <div>{renderItem.test2}</div>
+              <div>{renderItem.test3}</div>
+            </div>
+          );
+        }}
+      </DragulaContainer>
+    </div>
   );
 };
 
@@ -60,4 +86,13 @@ Reorder.args = {
   containerName: 'reorder',
   sortDirection: 'horizontal',
   onItemsChanged: action('onItemsChanged'),
+  className: 'horizontal padding border',
+};
+
+export const ReorderVertical = Template.bind({});
+ReorderVertical.args = {
+  containerName: 'reorder',
+  sortDirection: 'vertical',
+  onItemsChanged: action('onItemsChanged'),
+  className: 'vertical',
 };

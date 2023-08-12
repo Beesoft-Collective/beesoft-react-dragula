@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import React, { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import { DragulaService } from '../../services/dragula.service';
@@ -32,30 +33,55 @@ const DragulaContainer = ({
 
   useEffect(() => {
     service.current = DragulaService.getServiceInstance();
-    service.current?.onDrop((element, target, source) => {
-      if (containerElement.current?.isSameNode(target)) {
-        reorganizeItems(target.children);
-      } else if (containerElement.current?.isSameNode(source)) {
-        reorganizeItems(source.children);
+    if (containerElement.current) {
+      service.current?.addContainers([containerElement.current]);
+    }
+
+    service.current?.addAcceptsListener(containerId.current, (element, target) => {
+      return (target as HTMLElement).dataset['dragContainer'] === containerName;
+    });
+
+    service.current?.addOnDropListener((element, target, source) => {
+      const htmlTarget = target as HTMLElement;
+      const htmlSource = source as HTMLElement;
+
+      if (containerElement.current?.isSameNode(htmlTarget) && containerElement.current?.isSameNode(htmlSource)) {
+        reorganizeItems(htmlSource.children);
+      } else if (
+        containerElement.current?.isSameNode(htmlTarget) &&
+        htmlTarget.dataset['dragContainer'] === containerName
+      ) {
+        // this container is where the element was dropped
+        reorganizeItems(htmlTarget.children);
+      } else if (
+        containerElement.current?.isSameNode(htmlSource) &&
+        htmlSource.dataset['dragContainer'] === containerName
+      ) {
+        // this container is where the element came from
+        reorganizeItems(htmlSource.children);
       }
     });
   }, []);
 
   useEffect(() => {
-    if (!isArrayOfObjects(items)) {
-      throw new Error('The passed items must be an array of objects');
-    }
+    if (items) {
+      if (!isArrayOfObjects(items)) {
+        throw new Error('The passed items must be an array of objects');
+      }
 
-    const itemsWithKey: Array<TypeWithKey<Record<string, unknown>>> = [];
-    for (let i = 0, length = items.length; i < length; i++) {
-      itemsWithKey.push({
-        ...items[i],
-        _key: v4(),
-      });
-    }
+      if (!isEqual(items, currentItems.current)) {
+        const itemsWithKey: Array<TypeWithKey<Record<string, unknown>>> = [];
+        for (let i = 0, length = items.length; i < length; i++) {
+          itemsWithKey.push({
+            ...items[i],
+            _key: v4(),
+          });
+        }
 
-    currentItems.current = itemsWithKey;
-    setStateItems(itemsWithKey);
+        currentItems.current = itemsWithKey;
+        setStateItems(itemsWithKey);
+      }
+    }
   }, [items]);
 
   const reorganizeItems = (children: HTMLCollection) => {
@@ -66,10 +92,11 @@ const DragulaContainer = ({
       if (foundItem) {
         newArray.push(foundItem);
       } else {
+        const key = child.dataset['id'];
         const parsedItem: Record<string, unknown> = JSON.parse(child.dataset['data'] || '{}');
         const newItem: TypeWithKey<Record<string, unknown>> = {
           ...parsedItem,
-          _key: v4(),
+          _key: key || v4(),
         };
 
         newArray.push(newItem);
@@ -84,7 +111,7 @@ const DragulaContainer = ({
     service.current?.addContainers([container]);
     containerElement.current = container as HTMLElement;
   };
-
+  console.log('rendered');
   return (
     <div
       ref={(element) => element && onContainerCreated(element)}
