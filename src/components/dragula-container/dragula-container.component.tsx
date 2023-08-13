@@ -107,7 +107,7 @@ const DragulaContainer = ({
     service.current?.addContainers([container]);
     containerElement.current = container as HTMLElement;
   };
-  console.log('rendered');
+
   return (
     <div
       ref={(element) => element && onContainerCreated(element)}
