@@ -1,3 +1,6 @@
+import React from'react';
+import Layout from './layout';
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
@@ -7,3 +10,11 @@ export const parameters = {
     },
   },
 }
+
+export const decorators = [
+  (Story) => (
+    <Layout>
+      <Story />
+    </Layout>
+  )
+];

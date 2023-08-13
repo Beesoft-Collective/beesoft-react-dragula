@@ -1,64 +1,101 @@
+import { isEqual } from 'lodash';
 import React, { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import { DragulaService } from '../../services/dragula.service';
+import { isArrayOfObjects } from '../common/common-functions';
+import { TypeWithKey } from '../common/common-types';
 
-export type TypeWithKey<T> = T & { _key: string };
-
-export interface DragulaContainerProps<T> {
+export interface DragulaContainerProps {
   containerName: string;
   copyItems?: boolean;
   sortDirection?: 'vertical' | 'horizontal';
-  items: Array<T>;
-  onItemsChanged?: (items: Array<T>) => void;
-  children: (item: T) => ReactNode;
+  items: Array<unknown>;
+  onItemsChanged?: (items: Array<unknown>) => void;
+  className: string;
+  children: (item: unknown) => ReactNode | Array<ReactNode>;
 }
 
-function DragulaContainer<T>({
+const DragulaContainer = ({
   containerName,
   copyItems = false,
   sortDirection = 'vertical',
   items,
   onItemsChanged,
+  className,
   children,
-}: DragulaContainerProps<T>) {
-  const [stateItems, setStateItems] = useState<Array<TypeWithKey<T>>>();
+}: DragulaContainerProps) => {
+  const [stateItems, setStateItems] = useState<Array<TypeWithKey<Record<string, unknown>>>>();
 
-  const currentItems = useRef<Array<TypeWithKey<T>>>();
+  const containerId = useRef(v4());
+  const currentItems = useRef<Array<TypeWithKey<Record<string, unknown>>>>();
   const service = useRef<DragulaService>();
   const containerElement = useRef<HTMLElement>();
 
   useEffect(() => {
     service.current = DragulaService.getServiceInstance();
-    service.current?.onDrop((element, target, source) => {
-      if (containerElement.current?.isSameNode(target)) {
-        reorganizeItems(target.children);
-      } else if (containerElement.current?.isSameNode(source)) {
-        reorganizeItems(source.children);
+    if (containerElement.current) {
+      service.current?.addContainers([containerElement.current]);
+    }
+
+    service.current?.addOnDropListener((element, target, source) => {
+      const htmlTarget = target as HTMLElement;
+      const htmlSource = source as HTMLElement;
+
+      if (containerElement.current?.isSameNode(htmlTarget) && containerElement.current?.isSameNode(htmlSource)) {
+        reorganizeItems(htmlSource.children);
+      } else if (
+        containerElement.current?.isSameNode(htmlTarget) &&
+        htmlTarget.dataset['dragContainer'] === containerName
+      ) {
+        // this container is where the element was dropped
+        reorganizeItems(htmlTarget.children);
+      } else if (
+        containerElement.current?.isSameNode(htmlSource) &&
+        htmlSource.dataset['dragContainer'] === containerName
+      ) {
+        // this container is where the element came from
+        reorganizeItems(htmlSource.children);
       }
     });
   }, []);
 
   useEffect(() => {
-    const itemsWithKey: Array<TypeWithKey<T>> = [];
-    for (let i = 0, length = items.length; i < length; i++) {
-      itemsWithKey.push({
-        ...items[i],
-        _key: v4(),
-      });
-    }
+    if (items) {
+      if (!isArrayOfObjects(items)) {
+        throw new Error('The passed items must be an array of objects');
+      }
 
-    currentItems.current = itemsWithKey;
-    setStateItems(itemsWithKey);
+      if (!isEqual(items, currentItems.current)) {
+        const itemsWithKey: Array<TypeWithKey<Record<string, unknown>>> = [];
+        for (let i = 0, length = items.length; i < length; i++) {
+          itemsWithKey.push({
+            ...items[i],
+            _key: v4(),
+          });
+        }
+
+        currentItems.current = itemsWithKey;
+        setStateItems(itemsWithKey);
+      }
+    }
   }, [items]);
 
   const reorganizeItems = (children: HTMLCollection) => {
-    // TODO: This will not work when an item is added
-    const newArray: Array<TypeWithKey<T>> = [];
+    const newArray: Array<TypeWithKey<Record<string, unknown>>> = [];
     for (let i = 0, length = children.length; i < length; i++) {
       const child = children[i] as HTMLElement;
       const foundItem = currentItems.current?.find((item) => item._key === child.dataset['id']);
       if (foundItem) {
         newArray.push(foundItem);
+      } else {
+        const key = child.dataset['id'];
+        const parsedItem: Record<string, unknown> = JSON.parse(child.dataset['data'] || '{}');
+        const newItem: TypeWithKey<Record<string, unknown>> = {
+          ...parsedItem,
+          _key: key || v4(),
+        };
+
+        newArray.push(newItem);
       }
     }
 
@@ -74,6 +111,8 @@ function DragulaContainer<T>({
   return (
     <div
       ref={(element) => element && onContainerCreated(element)}
+      className={className}
+      data-id={containerId.current}
       data-drag-container={containerName}
       data-copy={copyItems}
       data-direction={sortDirection}
@@ -82,13 +121,13 @@ function DragulaContainer<T>({
         stateItems.map((item) => {
           const { _key, ...itemNoKey } = item;
           return (
-            <div key={_key} data-id={_key}>
-              {children(itemNoKey as T)}
+            <div key={_key} data-id={_key} data-data={JSON.stringify(itemNoKey)}>
+              {children(itemNoKey)}
             </div>
           );
         })}
     </div>
   );
-}
+};
 
 export default memo(DragulaContainer);
