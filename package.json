@@ -27,12 +27,6 @@
     "dist",
     "types"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/react-dragula.es.js",
-      "require": "./dist/react-dragula.umd.js"
-    }
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
