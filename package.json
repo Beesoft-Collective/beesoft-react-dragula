@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
+    "@release-it/bumper": "^5.1.0",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-interactions": "^6.5.12",
@@ -56,6 +57,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "json": "^11.0.0",
     "prettier": "^2.7.1",
+    "release-it": "^16.1.5",
     "rollup-plugin-gzip": "^3.1.0",
     "typescript": "^5.1.6",
     "vite": "3.2.7",
@@ -74,5 +76,8 @@
       "import": "./dist/react-dragula.es.js",
       "require": "./dist/react-dragula.umd.js"
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
