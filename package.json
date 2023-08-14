@@ -7,7 +7,10 @@
     "react",
     "dragula"
   ],
-  "repository": "https://github.com/Beehive-Software-Consultants/beesoft-react-dragula",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Beehive-Software-Consultants/beesoft-react-dragula"
+  },
   "main": "./dist/react-dragula.umd.js",
   "module": "./dist/react-dragula.es.js",
   "types": "./types/index.d.ts",
@@ -15,9 +18,49 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
     "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "dragula": "^3.7.3",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.19.6",
+    "@release-it/bumper": "^5.1.0",
+    "@storybook/addon-actions": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.12",
+    "@storybook/addon-interactions": "^6.5.12",
+    "@storybook/addon-links": "^6.5.12",
+    "@storybook/addons": "^6.5.12",
+    "@storybook/builder-vite": "^0.2.4",
+    "@storybook/react": "^6.5.12",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/theming": "^6.5.12",
+    "@types/dragula": "^3.7.1",
+    "@types/node": "^18.11.0",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "@vitejs/plugin-react": "^2.1.0",
+    "babel-loader": "^8.2.5",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.10",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "json": "^11.0.0",
+    "prettier": "^2.7.1",
+    "release-it": "^16.1.5",
+    "rollup-plugin-gzip": "^3.1.0",
+    "typescript": "^5.1.6",
+    "vite": "3.2.7",
+    "vite-plugin-dts": "^1.6.6"
   },
   "peerDependencies": {
     "react": "^18.2.0",
@@ -27,6 +70,12 @@
     "dist",
     "types"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/react-dragula.es.js",
+      "require": "./dist/react-dragula.umd.js"
+    }
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
