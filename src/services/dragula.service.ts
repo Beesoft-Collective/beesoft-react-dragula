@@ -83,51 +83,41 @@ export class DragulaService {
   public addIsContainerListener(listener: ContainerListenerType) {
     if (!this.options.isContainer) {
       this.addOptionSetting({
-        isContainer: this.isContainer,
+        isContainer: listener,
       });
     }
-
-    this.registeredListeners.container = listener;
   }
 
   public addMovesListener(listener: MovesListenerType) {
     if (!this.options.moves) {
       this.addOptionSetting({
-        moves: this.moves,
+        moves: listener,
       });
     }
-
-    this.registeredListeners.moves = listener;
   }
 
   public addAcceptsListener(listener: AcceptsListenerType) {
     if (!this.options.accepts) {
       this.addOptionSetting({
-        accepts: this.accepts,
+        accepts: listener,
       });
     }
-
-    this.registeredListeners.accepts = listener;
   }
 
   public addInvalidListener(listener: InvalidListenerType) {
     if (!this.options.invalid) {
       this.addOptionSetting({
-        invalid: this.invalid,
+        invalid: listener,
       });
     }
-
-    this.registeredListeners.invalid = listener;
   }
 
   public addCopyListener(listener: CopyListenerType) {
     if (!this.options.copy) {
       this.addOptionSetting({
-        copy: this.copy,
+        copy: listener,
       });
     }
-
-    this.registeredListeners.copy = listener;
   }
 
   public addOnDragListener(listener: DragListenerType) {
@@ -189,19 +179,14 @@ export class DragulaService {
   }
 
   private accepts(element?: Element, target?: Element, source?: Element, sibling?: Element): boolean {
-    const accepts = this.registeredListeners?.accepts;
-    if (!accepts) {
-      const targetContainer = (target as HTMLElement).dataset['dragContainer'];
-      const sourceContainer = (source as HTMLElement).dataset['dragContainer'];
+    const targetContainer = (target as HTMLElement).dataset['dragContainer'];
+    const sourceContainer = (source as HTMLElement).dataset['dragContainer'];
 
-      if (targetContainer === undefined && sourceContainer === undefined) {
-        return false;
-      }
-
-      return targetContainer === sourceContainer;
-    } else {
-      return accepts(element, target, source, sibling);
+    if (targetContainer === undefined && sourceContainer === undefined) {
+      return false;
     }
+
+    return targetContainer === sourceContainer;
   }
 
   private invalid(element?: Element, target?: Element): boolean {
