@@ -40,7 +40,7 @@ jobs:
           git config user.name ${{github.actor}}
           git config user.email ${{github.actor}}@users.noreply.github.com
       - name: Install dependencies
-        run: yarn install --prod
+        run: yarn install
       - name: Build package
         run: yarn build
       - name: Release to GitHub/NPM
