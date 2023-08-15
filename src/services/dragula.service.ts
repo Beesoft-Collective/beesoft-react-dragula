@@ -81,43 +81,33 @@ export class DragulaService {
   }
 
   public addIsContainerListener(listener: ContainerListenerType) {
-    if (!this.options.isContainer) {
-      this.addOptionSetting({
-        isContainer: listener,
-      });
-    }
+    this.addOptionSetting({
+      isContainer: listener,
+    });
   }
 
   public addMovesListener(listener: MovesListenerType) {
-    if (!this.options.moves) {
-      this.addOptionSetting({
-        moves: listener,
-      });
-    }
+    this.addOptionSetting({
+      moves: listener,
+    });
   }
 
   public addAcceptsListener(listener: AcceptsListenerType) {
-    if (!this.options.accepts) {
-      this.addOptionSetting({
-        accepts: listener,
-      });
-    }
+    this.addOptionSetting({
+      accepts: listener,
+    });
   }
 
   public addInvalidListener(listener: InvalidListenerType) {
-    if (!this.options.invalid) {
-      this.addOptionSetting({
-        invalid: listener,
-      });
-    }
+    this.addOptionSetting({
+      invalid: listener,
+    });
   }
 
   public addCopyListener(listener: CopyListenerType) {
-    if (!this.options.copy) {
-      this.addOptionSetting({
-        copy: listener,
-      });
-    }
+    this.addOptionSetting({
+      copy: listener,
+    });
   }
 
   public addOnDragListener(listener: DragListenerType) {
