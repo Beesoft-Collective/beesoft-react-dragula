@@ -11,6 +11,7 @@ export default defineConfig({
     dts({
       tsConfigFilePath: 'tsconfig.json',
       rollupTypes: true,
+      outputDir: 'types',
       insertTypesEntry: true,
       noEmitOnError: true,
       skipDiagnostics: false,
@@ -35,6 +36,6 @@ export default defineConfig({
         },
       },
     },
-    sourcemap: true,
+    sourcemap: false,
   },
 });
