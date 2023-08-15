@@ -3,17 +3,20 @@ import path from 'node:path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import gzipPlugin from 'rollup-plugin-gzip';
+import terser from '@rollup/plugin-terser';
 
 export default defineConfig({
   plugins: [
     react(),
     dts({
       tsConfigFilePath: 'tsconfig.json',
+      rollupTypes: true,
       insertTypesEntry: true,
       noEmitOnError: true,
       skipDiagnostics: false,
       logDiagnostics: true,
     }),
+    terser(),
     gzipPlugin(),
   ],
   build: {

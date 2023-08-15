@@ -16,7 +16,7 @@
   "types": "./types/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "rimraf dist && vite build",
     "preview": "vite preview",
     "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@babel/core": "^7.19.6",
     "@release-it/bumper": "^5.1.0",
+    "@rollup/plugin-terser": "^0.4.3",
     "@storybook/addon-actions": "^6.5.12",
     "@storybook/addon-essentials": "^6.5.12",
     "@storybook/addon-interactions": "^6.5.12",
