@@ -16,7 +16,8 @@
   "types": "./types/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "rimraf dist && vite build",
+    "build": "vite build",
+    "build:local": "rimraf dist && vite build",
     "preview": "vite preview",
     "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
     "build-storybook": "build-storybook"
