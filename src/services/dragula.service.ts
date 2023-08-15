@@ -90,7 +90,7 @@ export class DragulaService {
     this.registeredListeners.container = listener;
   }
 
-  public addMovesListener(id: string, listener: MovesListenerType) {
+  public addMovesListener(listener: MovesListenerType) {
     if (!this.options.moves) {
       this.addOptionSetting({
         moves: this.moves,
@@ -100,11 +100,17 @@ export class DragulaService {
     this.registeredListeners.moves = listener;
   }
 
-  public addAcceptsListener(id: string, listener: AcceptsListenerType) {
+  public addAcceptsListener(listener: AcceptsListenerType) {
+    if (!this.options.accepts) {
+      this.addOptionSetting({
+        accepts: this.accepts,
+      });
+    }
+
     this.registeredListeners.accepts = listener;
   }
 
-  public addInvalidListener(id: string, listener: InvalidListenerType) {
+  public addInvalidListener(listener: InvalidListenerType) {
     if (!this.options.invalid) {
       this.addOptionSetting({
         invalid: this.invalid,
@@ -114,7 +120,7 @@ export class DragulaService {
     this.registeredListeners.invalid = listener;
   }
 
-  public addCopyListener(id: string, listener: CopyListenerType) {
+  public addCopyListener(listener: CopyListenerType) {
     if (!this.options.copy) {
       this.addOptionSetting({
         copy: this.copy,
@@ -165,7 +171,7 @@ export class DragulaService {
    ****************************************************************************************/
 
   private isContainer(element?: Element): boolean {
-    const container = this.registeredListeners.container;
+    const container = this.registeredListeners?.container;
     if (container) {
       return container(element);
     }
@@ -174,7 +180,7 @@ export class DragulaService {
   }
 
   private moves(element?: Element, container?: Element, handle?: Element, sibling?: Element): boolean {
-    const moves = this.registeredListeners.moves;
+    const moves = this.registeredListeners?.moves;
     if (moves) {
       return moves(element, container, handle, sibling);
     }
@@ -199,7 +205,7 @@ export class DragulaService {
   }
 
   private invalid(element?: Element, target?: Element): boolean {
-    const invalid = this.registeredListeners.invalid;
+    const invalid = this.registeredListeners?.invalid;
     if (invalid) {
       return invalid(element, target);
     }
@@ -208,7 +214,7 @@ export class DragulaService {
   }
 
   private copy(element: Element, source: Element): boolean {
-    const copy = this.registeredListeners.copy;
+    const copy = this.registeredListeners?.copy;
     if (copy) {
       return copy(element, source);
     }
