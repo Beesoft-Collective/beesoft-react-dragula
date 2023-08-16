@@ -23,24 +23,14 @@ export type ClonedListenerType = (clone: Element, original: Element, type: 'mirr
 
 export type GenericListenerType = (element: Element, container: Element, source: Element) => void;
 
-type IdListenerType<T> = {
-  id: string;
-  listener: T;
-};
-
 export interface AvailableListeners {
-  container?: ContainerListenerType;
-  moves?: MovesListenerType;
-  accepts?: AcceptsListenerType;
-  invalid?: InvalidListenerType;
-  copy?: CopyListenerType;
-  drag: Array<IdListenerType<DragListenerType>>;
-  dragEnd: Array<IdListenerType<DragEndListenerType>>;
-  drop: Array<IdListenerType<DropListenerType>>;
-  cloned: Array<IdListenerType<ClonedListenerType>>;
-  cancel: Array<IdListenerType<GenericListenerType>>;
-  remove: Array<IdListenerType<GenericListenerType>>;
-  shadow: Array<IdListenerType<GenericListenerType>>;
-  over: Array<IdListenerType<GenericListenerType>>;
-  out: Array<IdListenerType<GenericListenerType>>;
+  drag: Array<DragListenerType>;
+  dragEnd: Array<DragEndListenerType>;
+  drop: Array<DropListenerType>;
+  cloned: Array<ClonedListenerType>;
+  cancel: Array<GenericListenerType>;
+  remove: Array<GenericListenerType>;
+  shadow: Array<GenericListenerType>;
+  over: Array<GenericListenerType>;
+  out: Array<GenericListenerType>;
 }

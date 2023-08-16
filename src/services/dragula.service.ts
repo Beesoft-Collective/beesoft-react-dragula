@@ -78,6 +78,7 @@ export class DragulaService {
     const containers = cloneDeep(this.drake.containers);
     this.drake.destroy();
     this.drake = dragula(containers, this.options);
+    this.addRegisteredListeners();
   }
 
   public addIsContainerListener(listener: ContainerListenerType) {
@@ -111,39 +112,60 @@ export class DragulaService {
   }
 
   public addOnDragListener(listener: DragListenerType) {
+    this.registeredListeners.drag.push(listener);
     this.drake.on('drag', listener);
   }
 
   public addOnDragEndListener(listener: DragEndListenerType) {
+    this.registeredListeners.dragEnd.push(listener);
     this.drake.on('dragend', listener);
   }
 
   public addOnDropListener(listener: DropListenerType) {
+    this.registeredListeners.drop.push(listener);
     this.drake.on('drop', listener);
   }
 
   public addOnClonedListener(listener: ClonedListenerType) {
+    this.registeredListeners.cloned.push(listener);
     this.drake.on('cloned', listener);
   }
 
   public addOnCancelListener(listener: GenericListenerType) {
+    this.registeredListeners.cancel.push(listener);
     this.drake.on('cancel', listener);
   }
 
   public addOnRemoveListener(listener: GenericListenerType) {
+    this.registeredListeners.remove.push(listener);
     this.drake.on('remove', listener);
   }
 
   public addOnShadowListener(listener: GenericListenerType) {
+    this.registeredListeners.shadow.push(listener);
     this.drake.on('shadow', listener);
   }
 
   public addOnOverListener(listener: GenericListenerType) {
+    this.registeredListeners.over.push(listener);
     this.drake.on('over', listener);
   }
 
   public addOnOutListener(listener: GenericListenerType) {
+    this.registeredListeners.out.push(listener);
     this.drake.on('out', listener);
+  }
+
+  private addRegisteredListeners() {
+    this.registeredListeners.drag.forEach((listener) => this.drake.on('drag', listener));
+    this.registeredListeners.dragEnd.forEach((listener) => this.drake.on('dragend', listener));
+    this.registeredListeners.drop.forEach((listener) => this.drake.on('drop', listener));
+    this.registeredListeners.cloned.forEach((listener) => this.drake.on('cloned', listener));
+    this.registeredListeners.cancel.forEach((listener) => this.drake.on('cancel', listener));
+    this.registeredListeners.remove.forEach((listener) => this.drake.on('remove', listener));
+    this.registeredListeners.shadow.forEach((listener) => this.drake.on('shadow', listener));
+    this.registeredListeners.over.forEach((listener) => this.drake.on('over', listener));
+    this.registeredListeners.out.forEach((listener) => this.drake.on('out', listener));
   }
 
   /*****************************************************************************************
@@ -151,24 +173,14 @@ export class DragulaService {
    ****************************************************************************************/
 
   private isContainer(element?: Element): boolean {
-    const container = this.registeredListeners?.container;
-    if (container) {
-      return container(element);
-    }
-
     return false;
   }
 
-  private moves(element?: Element, container?: Element, handle?: Element, sibling?: Element): boolean {
-    const moves = this.registeredListeners?.moves;
-    if (moves) {
-      return moves(element, container, handle, sibling);
-    }
-
+  private moves(element?: Element, container?: Element, handle?: Element): boolean {
     return false;
   }
 
-  private accepts(element?: Element, target?: Element, source?: Element, sibling?: Element): boolean {
+  private accepts(element?: Element, target?: Element, source?: Element): boolean {
     const targetContainer = (target as HTMLElement).dataset['dragContainer'];
     const sourceContainer = (source as HTMLElement).dataset['dragContainer'];
 
@@ -180,20 +192,10 @@ export class DragulaService {
   }
 
   private invalid(element?: Element, target?: Element): boolean {
-    const invalid = this.registeredListeners?.invalid;
-    if (invalid) {
-      return invalid(element, target);
-    }
-
     return false;
   }
 
   private copy(element: Element, source: Element): boolean {
-    const copy = this.registeredListeners?.copy;
-    if (copy) {
-      return copy(element, source);
-    }
-
     return false;
   }
 }
