@@ -89,6 +89,16 @@ Reorder.args = {
   className: 'horizontal padding border',
 };
 
+export const ReorderCopy = Template.bind({});
+ReorderCopy.args = {
+  containerName: 'reorder',
+  sortDirection: 'horizontal',
+  copyItems: true,
+  allowCopySorting: true,
+  onItemsChanged: action('onItemsChanged'),
+  className: 'horizontal padding border',
+};
+
 export const ReorderVertical = Template.bind({});
 ReorderVertical.args = {
   containerName: 'reorder',
