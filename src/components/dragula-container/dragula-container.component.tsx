@@ -1,15 +1,37 @@
 import { isEqual } from 'lodash';
 import React, { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
-import { DragulaService } from '../../services/dragula.service';
-import { isArrayOfObjects } from '../common/common-functions';
-import { TypeWithKey } from '../common/common-types';
+import { isArrayOfObjects } from '../../common/common-functions';
+import { TypeWithKey } from '../../common/common-types';
+import { DragulaInstance } from '../../common/dragula-instance';
 
 export interface DragulaContainerProps {
+  /**
+   * The name of this container; 2 containers with the same names are allowed to drag and drop items between each other.
+   */
   containerName: string;
+  /**
+   * If true dragging an item from the container will copy it instead of remove it (default false).
+   */
   copyItems?: boolean;
+  /**
+   * When copy is true this determines if the items can still be reordered (default false).
+   */
+  allowCopySorting?: boolean;
   sortDirection?: 'vertical' | 'horizontal';
+  /**
+   * The items to render inside the dragula container.
+   */
   items: Array<unknown>;
+  /**
+   * If the object data being created has a unique identifier defining it here will improve the comparison logic
+   * resulting in less renders.
+   */
+  identityField?: string;
+  /**
+   * Fired when the items within a container are added to, removed from or reordered.
+   * @param {Array<unknown>} items - The current items within the container after the operation has completed.
+   */
   onItemsChanged?: (items: Array<unknown>) => void;
   className: string;
   children: (item: unknown) => ReactNode | Array<ReactNode>;
@@ -18,8 +40,10 @@ export interface DragulaContainerProps {
 const DragulaContainer = ({
   containerName,
   copyItems = false,
+  allowCopySorting = false,
   sortDirection = 'vertical',
   items,
+  identityField,
   onItemsChanged,
   className,
   children,
@@ -28,16 +52,16 @@ const DragulaContainer = ({
 
   const containerId = useRef(v4());
   const currentItems = useRef<Array<TypeWithKey<Record<string, unknown>>>>();
-  const service = useRef<DragulaService>();
+  const dragula = useRef<DragulaInstance>();
   const containerElement = useRef<HTMLElement>();
 
   useEffect(() => {
-    service.current = DragulaService.getServiceInstance();
+    dragula.current = DragulaInstance.getInstance();
     if (containerElement.current) {
-      service.current?.addContainers([containerElement.current]);
+      dragula.current?.addContainers([containerElement.current]);
     }
 
-    service.current?.addOnDropListener((element, target, source) => {
+    dragula.current?.onDrop((element, target, source) => {
       const htmlTarget = target as HTMLElement;
       const htmlSource = source as HTMLElement;
 
@@ -60,18 +84,43 @@ const DragulaContainer = ({
   }, []);
 
   useEffect(() => {
+    dragula.current?.addOptions({
+      copySortSource: allowCopySorting,
+    });
+  }, [allowCopySorting]);
+
+  useEffect(() => {
     if (items) {
       if (!isArrayOfObjects(items)) {
         throw new Error('The passed items must be an array of objects');
       }
 
-      if (!isEqual(items, currentItems.current)) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const currentItemsNoKey = currentItems.current?.map(({ _key, ...itemNoKey }) => itemNoKey);
+      if (!isEqual(items, currentItemsNoKey)) {
         const itemsWithKey: Array<TypeWithKey<Record<string, unknown>>> = [];
         for (let i = 0, length = items.length; i < length; i++) {
-          itemsWithKey.push({
-            ...items[i],
-            _key: v4(),
-          });
+          const item = items[i];
+          let itemIndex = -1;
+          if (identityField && currentItems.current) {
+            itemIndex = currentItems.current.findIndex(
+              (currentItem) => currentItem[identityField] === item[identityField]
+            );
+          } else if (currentItems.current) {
+            itemIndex = currentItems.current.findIndex((currentItem) => isEqual(currentItem, item));
+          }
+
+          if (itemIndex > -1 && currentItems.current) {
+            itemsWithKey.push({
+              ...item,
+              _key: currentItems.current[itemIndex]._key,
+            });
+          } else {
+            itemsWithKey.push({
+              ...item,
+              _key: v4(),
+            });
+          }
         }
 
         currentItems.current = itemsWithKey;
@@ -104,7 +153,7 @@ const DragulaContainer = ({
   };
 
   const onContainerCreated = (container: Element) => {
-    service.current?.addContainers([container]);
+    dragula.current?.addContainers([container]);
     containerElement.current = container as HTMLElement;
   };
 
@@ -115,6 +164,7 @@ const DragulaContainer = ({
       data-id={containerId.current}
       data-drag-container={containerName}
       data-copy={copyItems}
+      data-copy-ordering={allowCopySorting}
       data-direction={sortDirection}
     >
       {stateItems &&

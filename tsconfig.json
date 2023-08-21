@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "rootDir": ".",
+    "lib": ["dom", "dom.iterable", "ESNext"],
+    "rootDir": "src",
     "declaration": true,
     "declarationDir": "types",
     "outDir": "types",
@@ -25,6 +25,5 @@
     "newLine": "lf"
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "dist", "types", "public", "./src/**/*.stories.tsx", "./src/**/*.stories.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
