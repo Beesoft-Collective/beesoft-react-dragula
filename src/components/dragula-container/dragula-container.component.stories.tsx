@@ -1,13 +1,19 @@
-import { action } from '@storybook/addon-actions';
 import React from 'react';
-import { Story } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta, StoryObj } from '@storybook/react';
 import { useRef } from 'react';
 import DragulaContainer, { DragulaContainerProps } from './dragula-container.component';
 
-export default {
+import "../../../node_modules/dragula/dist/dragula.min.css";
+
+const meta: Meta<typeof DragulaContainer> = {
   title: 'Dragula Container',
   component: DragulaContainer,
 };
+
+export default meta;
+
+type Story = StoryObj<typeof DragulaContainer>;
 
 export type TestItem = {
   test1: string;
@@ -15,7 +21,7 @@ export type TestItem = {
   test3: string;
 };
 
-const Template: Story<DragulaContainerProps> = (args: DragulaContainerProps) => {
+const Template = (args: DragulaContainerProps) => {
   const data = useRef<Array<TestItem>>([
     {
       test1: 'Test 1 Item 1',
@@ -81,28 +87,34 @@ const Template: Story<DragulaContainerProps> = (args: DragulaContainerProps) => 
   );
 };
 
-export const Reorder = Template.bind({});
-Reorder.args = {
-  containerName: 'reorder',
-  sortDirection: 'horizontal',
-  onItemsChanged: action('onItemsChanged'),
-  className: 'horizontal padding border',
+export const Reorder: Story = {
+  args: {
+    containerName: 'reorder',
+    sortDirection: 'horizontal',
+    onItemsChanged: action('onItemsChanged'),
+    className: 'horizontal padding border',
+  },
+  render: (args) => <Template {...args} />,
 };
 
-export const ReorderCopy = Template.bind({});
-ReorderCopy.args = {
-  containerName: 'reorder',
-  sortDirection: 'horizontal',
-  copyItems: true,
-  allowCopySorting: true,
-  onItemsChanged: action('onItemsChanged'),
-  className: 'horizontal padding border',
+export const ReorderCopy: Story = {
+  args: {
+    containerName: 'reorder',
+    sortDirection: 'horizontal',
+    copyItems: true,
+    allowCopySorting: true,
+    onItemsChanged: action('onItemsChanged'),
+    className: 'horizontal padding border',
+  },
+  render: (args) => <Template {...args} />,
 };
 
-export const ReorderVertical = Template.bind({});
-ReorderVertical.args = {
-  containerName: 'reorder',
-  sortDirection: 'vertical',
-  onItemsChanged: action('onItemsChanged'),
-  className: 'vertical',
+export const ReorderVertical: Story = {
+  args: {
+    containerName: 'reorder',
+    sortDirection: 'vertical',
+    onItemsChanged: action('onItemsChanged'),
+    className: 'vertical',
+  },
+  render: (args) => <Template {...args} />,
 };

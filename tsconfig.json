@@ -1,29 +1,31 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["dom", "dom.iterable", "ESNext"],
-    "rootDir": "src",
-    "declaration": true,
-    "declarationDir": "types",
-    "outDir": "types",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "removeComments": true,
-    "allowSyntheticDefaultImports": true,
+    // enable latest features
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "module": "esnext",
+    "target": "esnext",
+
+    // if TS 5.x+
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+
+    "jsx": "react-jsx", // support JSX
+    "allowJs": true, // allow importing `.js` from `.ts`
+
+    // best practices
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "noImplicitAny": false,
-    "jsx": "react-jsx",
-    "isolatedModules": true,
-    "allowJs": true,
-    "newLine": "lf"
+    "skipLibCheck": true,
+    "composite": true,
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+
+    "paths": {
+      "common/*": ["./src/common/*"],
+    },
   },
-  "include": ["./src/**/*"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*", "./.storybook/**/*", "vite.config.ts"],
+  "exclude": ["node_modules", "dist", "types", "public"],
 }

@@ -2,7 +2,7 @@ import DragulaContainer from './components/dragula-container/dragula-container.c
 import useDragula from './hooks/use-dragula';
 
 // types
-import { DragulaAvailableOptions } from './common/dragula-types';
+import { DragulaAvailableOptions } from 'common/dragula-types';
 
 import './index.css';
 

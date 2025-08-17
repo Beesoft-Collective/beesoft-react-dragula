@@ -3,6 +3,11 @@
   "version": "0.0.9",
   "private": false,
   "author": "Brandon Trabon",
+  "type": "module",
+  "files": [
+    "dist",
+    "types"
+  ],
   "keywords": [
     "react",
     "dragula"
@@ -11,75 +16,64 @@
     "type": "git",
     "url": "https://github.com/Beehive-Software-Consultants/beesoft-react-dragula"
   },
-  "main": "./dist/react-dragula.umd.js",
   "module": "./dist/react-dragula.es.js",
   "types": "./types/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "rimraf dist && rimraf types/* && vite build",
-    "preview": "vite preview",
-    "storybook": "NODE_OPTIONS=--openssl-legacy-provider start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build": "rimraf dist && rimraf types && bunx vite build",
+    "start": "NODE_ENV=production bun src/index.tsx",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@beesoft/common": "^0.1.18",
     "dragula": "^3.7.3",
-    "lodash": "^4.17.21",
-    "uuid": "^9.0.0"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@release-it/bumper": "^5.1.0",
-    "@rollup/plugin-terser": "^0.4.3",
-    "@storybook/addon-actions": "^6.5.12",
-    "@storybook/addon-essentials": "^6.5.12",
-    "@storybook/addon-interactions": "^6.5.12",
-    "@storybook/addon-links": "^6.5.12",
-    "@storybook/addons": "^6.5.12",
-    "@storybook/builder-vite": "^0.2.4",
-    "@storybook/react": "^6.5.12",
-    "@storybook/testing-library": "^0.0.13",
-    "@storybook/theming": "^6.5.12",
-    "@types/dragula": "^3.7.1",
-    "@types/node": "^18.11.0",
-    "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.6",
-    "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "@vitejs/plugin-react": "^2.1.0",
-    "babel-loader": "^8.2.5",
-    "eslint": "^8.26.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.10",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "json": "^11.0.0",
-    "prettier": "^2.7.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "release-it": "^16.1.5",
-    "rollup-plugin-gzip": "^3.1.0",
-    "typescript": "^5.1.6",
-    "vite": "3.2.8",
-    "vite-plugin-dts": "^1.6.6"
+    "@eslint/js": "^9.33.0",
+    "@release-it/bumper": "^7.0.5",
+    "@release-it/keep-a-changelog": "^7.0.0",
+    "@storybook/react-vite": "^9.1.2",
+    "@stylistic/eslint-plugin": "^5.2.3",
+    "@types/bun": "latest",
+    "@types/dragula": "^3.7.5",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react-swc": "^4.0.0",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-storybook": "^9.1.2",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "release-it": "^19.0.4",
+    "rimraf": "^6.0.1",
+    "storybook": "^9.1.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.39.1",
+    "vite": "^7.1.2",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-dts": "^4.5.4",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "files": [
-    "dist",
-    "types"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/react-dragula.es.js",
-      "require": "./dist/react-dragula.umd.js"
-    }
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
 }

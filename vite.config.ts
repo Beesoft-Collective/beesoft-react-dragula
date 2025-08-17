@@ -1,30 +1,27 @@
-import react from '@vitejs/plugin-react';
-import path from 'node:path';
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import path from 'node:path';
 import dts from 'vite-plugin-dts';
-import gzipPlugin from 'rollup-plugin-gzip';
-import terser from '@rollup/plugin-terser';
+import compression from 'vite-plugin-compression';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [
     react(),
+    tsconfigPaths(),
     dts({
-      tsConfigFilePath: 'tsconfig.json',
+      tsconfigPath: 'tsconfig.json',
       rollupTypes: true,
-      outputDir: 'types',
+      outDir: 'types',
       insertTypesEntry: true,
-      noEmitOnError: true,
-      skipDiagnostics: false,
-      logDiagnostics: true,
     }),
-    terser(),
-    gzipPlugin(),
+    compression(),
   ],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'ReactDragula',
-      formats: ['es', 'umd'],
+      name: 'BeesoftReactDragula',
+      formats: ['es'],
       fileName: (format) => `react-dragula.${format}.js`,
     },
     rollupOptions: {
@@ -36,6 +33,7 @@ export default defineConfig({
         },
       },
     },
+    minify: 'esbuild',
     sourcemap: false,
   },
 });

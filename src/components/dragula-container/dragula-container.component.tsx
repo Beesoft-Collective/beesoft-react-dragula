@@ -1,9 +1,9 @@
-import { isEqual } from 'lodash';
 import React, { memo, ReactNode, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
-import { isArrayOfObjects } from '../../common/common-functions';
-import { TypeWithKey } from '../../common/common-types';
-import { DragulaInstance } from '../../common/dragula-instance';
+import { isArrayOfObjects } from 'common/common-functions';
+import { TypeWithKey } from 'common/common-types';
+import { DragulaInstance } from 'common/dragula-instance';
+import { deepEquals } from '@beesoft/common';
 
 export interface DragulaContainerProps {
   /**
@@ -97,7 +97,7 @@ const DragulaContainer = ({
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const currentItemsNoKey = currentItems.current?.map(({ _key, ...itemNoKey }) => itemNoKey);
-      if (!isEqual(items, currentItemsNoKey)) {
+      if (!deepEquals(items, currentItemsNoKey)) {
         const itemsWithKey: Array<TypeWithKey<Record<string, unknown>>> = [];
         for (let i = 0, length = items.length; i < length; i++) {
           const item = items[i];
@@ -107,7 +107,7 @@ const DragulaContainer = ({
               (currentItem) => currentItem[identityField] === item[identityField]
             );
           } else if (currentItems.current) {
-            itemIndex = currentItems.current.findIndex((currentItem) => isEqual(currentItem, item));
+            itemIndex = currentItems.current.findIndex((currentItem) => deepEquals(currentItem, item));
           }
 
           if (itemIndex > -1 && currentItems.current) {

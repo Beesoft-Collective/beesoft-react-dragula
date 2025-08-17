@@ -3,6 +3,7 @@
     "publish": true
   },
   "git": {
+    "requireCleanWorkingDir": false,
     "commitMessage": "[automated commit] Release v${version}",
     "tagAnnotation": "Release v${version}",
     "tagName": "v${version}"
@@ -15,6 +16,15 @@
   "plugins": {
     "@release-it/bumper": {
       "in": "package.json"
+    },
+    "@release-it/keep-a-changelog": {
+      "addUnreleased": true,
+      "strictLatest": false,
+      "head": "develop",
+      "addVersionUrl": true,
+      "versionUrlFormats": {
+        "versionUrl": "{repositoryUrl}/releases/tag/{tagName}"
+      }
     }
   }
 }

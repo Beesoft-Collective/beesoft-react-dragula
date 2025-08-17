@@ -1,7 +1,9 @@
-import { isPlainObject } from 'lodash';
-
 export function isObject(object: unknown): object is Record<string, unknown> {
-  return isPlainObject(object);
+  if (object === null || object === undefined) {
+    return false;
+  }
+
+  return typeof object === 'object';
 }
 
 export function isArrayOfObjects(object: unknown): object is Array<Record<string, unknown>> {
