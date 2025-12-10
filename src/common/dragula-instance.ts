@@ -45,9 +45,6 @@ export class DragulaInstance {
       this.instance.addContainers(containers);
     }
 
-    if (options) {
-    }
-
     return this.instance;
   }
 
