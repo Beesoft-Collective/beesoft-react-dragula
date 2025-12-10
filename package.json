@@ -18,6 +18,12 @@
   },
   "module": "./dist/react-dragula.es.js",
   "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/react-dragula.es.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "rimraf dist && rimraf types && bunx vite build",
