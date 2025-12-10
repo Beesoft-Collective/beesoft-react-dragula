@@ -24,15 +24,15 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT }}
           ref: ${{github.ref_name}}
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: 18
+          bun-version: latest
           registry-url: https://registry.npmjs.org/
           scope: '@beesoft'
       - name: Git config
@@ -40,11 +40,15 @@ jobs:
           git config user.name ${{github.actor}}
           git config user.email ${{github.actor}}@users.noreply.github.com
       - name: Install dependencies
-        run: yarn install
+        run: bun install
+      - name: Initialize NPM Config
+        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+        env:
+          NPM_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
       - name: Build package
-        run: yarn build
+        run: bun run build
       - name: Release to GitHub/NPM
-        run: yarn release-it ${{ github.event.inputs.version }} --ci
+        run: bunx release-it ${{ github.event.inputs.version }} --ci
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
