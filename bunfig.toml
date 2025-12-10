@@ -2,4 +2,5 @@
 env = "BUN_PUBLIC_*"
 
 [loader]
-".toml" = "toml"
+".toml" = "toml"[install.scopes]
+'@beesoft' = { token = "$BUN_AUTH_TOKEN", url = "https://registry.npmjs.org/"}
