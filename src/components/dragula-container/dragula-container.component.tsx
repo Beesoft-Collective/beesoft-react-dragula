@@ -51,9 +51,9 @@ const DragulaContainer = ({
   const [stateItems, setStateItems] = useState<Array<TypeWithKey<Record<string, unknown>>>>();
 
   const containerId = useRef(v4());
-  const currentItems = useRef<Array<TypeWithKey<Record<string, unknown>>>>();
-  const dragula = useRef<DragulaInstance>();
-  const containerElement = useRef<HTMLElement>();
+  const currentItems = useRef<Array<TypeWithKey<Record<string, unknown>>>>(undefined);
+  const dragula = useRef<DragulaInstance>(undefined);
+  const containerElement = useRef<HTMLElement>(undefined);
 
   useEffect(() => {
     dragula.current = DragulaInstance.getInstance();
@@ -159,7 +159,7 @@ const DragulaContainer = ({
 
   return (
     <div
-      ref={(element) => element && onContainerCreated(element)}
+      ref={(element) => { if (element) onContainerCreated(element) }}
       className={className}
       data-id={containerId.current}
       data-drag-container={containerName}
